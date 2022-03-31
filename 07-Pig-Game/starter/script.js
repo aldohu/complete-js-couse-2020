@@ -9,11 +9,9 @@ GAME RULES :
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */ 
-var scores,roundScore, activePlayer;
+var scores,roundScore, activePlayer,gamePlaying;
 
-scores = [0,1];
-roundScore = 0;
-activePlayer = 0;
+init();
 
 //document.querySelector("#current-" + activePlayer).textContent = dice;
 
@@ -21,14 +19,10 @@ activePlayer = 0;
 
 //var x = document.querySelector("#score-0").textContent;
 
-document.querySelector(".dice").style.display = "none";
 
-document.getElementById("score--0").textContent = "0";
-document.getElementById("score--1").textContent = "0";
-document.getElementById("current--0").textContent = "0";
-document.getElementById("current--1").textContent = "0";
 
 document.querySelector(".btn--roll").addEventListener("click",function(){
+   if(gamePlaying) {
     //1. Random number
     var dice = (Math.floor(Math.random() * 6)) + 1;
 
@@ -47,9 +41,10 @@ document.querySelector(".btn--roll").addEventListener("click",function(){
         //Next player
         nextPlayer();
     }
-})
+}})
 
 document.querySelector(".btn--hold").addEventListener("click", function(){
+    if(gamePlaying) {
     //1. add current score to global score
     scores[activePlayer] +=  roundScore;
     //2. update the UI 
@@ -60,10 +55,15 @@ document.querySelector(".btn--hold").addEventListener("click", function(){
         document.querySelector("#name--" + activePlayer).textContent ="Winner"
         document.querySelector(".player--" + activePlayer).classList.add("player--winner");
         document.querySelector(".player--" + activePlayer).classList.remove("player--active")
+        //document.querySelector(".btn--roll").style.display = "none";
+        //document.querySelector(".btn--hold").style.display = "none";
+        gamePlaying = false;
+        //document.querySelector(".btn--roll").setAttribute("disabled","");
+        //document.querySelector(".btn--hold").setAttribute("disabled", "");
     }else {
         nextPlayer();
     }
-})
+}})
 
 function nextPlayer(){
     activePlayer === 0? activePlayer =1: activePlayer = 0;
@@ -74,4 +74,27 @@ function nextPlayer(){
 
         document.querySelector(".dice").style.display = "none";
         roundScore = 0;
+}
+
+document.querySelector(".btn--new").addEventListener("click", init)
+   
+    
+
+
+function init() {
+    scores = [0,0];
+    roundScore = 0;
+    activePlayer = 0;
+    gamePlaying = true;
+    document.querySelector(".dice").style.display = "none";
+    document.getElementById("score--0").textContent = "0";
+    document.getElementById("score--1").textContent = "0";
+    document.getElementById("current--0").textContent = "0";
+    document.getElementById("current--1").textContent = "0";
+    document.querySelector(".btn--roll").style.display = "block";
+    document.querySelector(".btn--hold").style.display = "block";
+    document.querySelector("#name--0").textContent ="Player 1"
+    document.querySelector(".player--0").classList.remove("player--winner");
+    document.querySelector(".player--1").classList.remove("player--winner");
+    document.querySelector(".player--0").classList.add("player--active")
 }
